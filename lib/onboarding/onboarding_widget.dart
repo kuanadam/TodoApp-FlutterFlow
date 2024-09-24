@@ -354,7 +354,7 @@ class _OnboardingWidgetState extends State<OnboardingWidget> {
                       birthday: _model.datePicked,
                     ));
 
-                    context.pushNamed('onboarding');
+                    context.pushNamed('tasks');
                   },
                   text: 'Complete Birthday',
                   options: FFButtonOptions(
