@@ -105,17 +105,15 @@ class _TasksWidgetState extends State<TasksWidget> {
                 Expanded(
                   child: StreamBuilder<List<TasksRecord>>(
                     stream: queryTasksRecord(
-                      queryBuilder: (tasksRecord) =>
-                          tasksRecord.where(Filter.or(
-                        Filter(
-                          'user',
-                          isEqualTo: currentUserReference,
-                        ),
-                        Filter(
-                          'completed',
-                          isEqualTo: false,
-                        ),
-                      )),
+                      queryBuilder: (tasksRecord) => tasksRecord
+                          .where(
+                            'user',
+                            isEqualTo: currentUserReference,
+                          )
+                          .where(
+                            'completed',
+                            isEqualTo: false,
+                          ),
                     ),
                     builder: (context, snapshot) {
                       // Customize what your widget looks like when it's loading.
@@ -143,11 +141,36 @@ class _TasksWidgetState extends State<TasksWidget> {
                         itemBuilder: (context, listViewIndex) {
                           final listViewTasksRecord =
                               listViewTasksRecordList[listViewIndex];
-                          return TaskWidget(
-                            key: Key(
-                                'Key2q6_${listViewIndex}_of_${listViewTasksRecordList.length}'),
-                            tasksDoc: widget.taskDoc!,
-                            checkAction: () async {},
+                          return InkWell(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            onTap: () async {
+                              context.pushNamed(
+                                'details',
+                                queryParameters: {
+                                  'taskDocs': serializeParam(
+                                    listViewTasksRecord,
+                                    ParamType.Document,
+                                  ),
+                                }.withoutNulls,
+                                extra: <String, dynamic>{
+                                  'taskDocs': listViewTasksRecord,
+                                },
+                              );
+                            },
+                            child: TaskWidget(
+                              key: Key(
+                                  'Key2q6_${listViewIndex}_of_${listViewTasksRecordList.length}'),
+                              tasksDoc: listViewTasksRecord,
+                              checkAction: () async {
+                                await listViewTasksRecord.reference
+                                    .update(createTasksRecordData(
+                                  completed: true,
+                                ));
+                              },
+                            ),
                           );
                         },
                       );

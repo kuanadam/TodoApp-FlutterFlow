@@ -99,17 +99,15 @@ class _CompletedWidgetState extends State<CompletedWidget> {
                 Expanded(
                   child: StreamBuilder<List<TasksRecord>>(
                     stream: queryTasksRecord(
-                      queryBuilder: (tasksRecord) =>
-                          tasksRecord.where(Filter.or(
-                        Filter(
-                          'user',
-                          isEqualTo: currentUserReference,
-                        ),
-                        Filter(
-                          'completed',
-                          isEqualTo: false,
-                        ),
-                      )),
+                      queryBuilder: (tasksRecord) => tasksRecord
+                          .where(
+                            'user',
+                            isEqualTo: currentUserReference,
+                          )
+                          .where(
+                            'completed',
+                            isEqualTo: true,
+                          ),
                     ),
                     builder: (context, snapshot) {
                       // Customize what your widget looks like when it's loading.
@@ -137,23 +135,16 @@ class _CompletedWidgetState extends State<CompletedWidget> {
                         itemBuilder: (context, listViewIndex) {
                           final listViewTasksRecord =
                               listViewTasksRecordList[listViewIndex];
-                          return InkWell(
-                            splashColor: Colors.transparent,
-                            focusColor: Colors.transparent,
-                            hoverColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            onTap: () async {
+                          return TaskWidget(
+                            key: Key(
+                                'Key0i2_${listViewIndex}_of_${listViewTasksRecordList.length}'),
+                            tasksDoc: listViewTasksRecord,
+                            checkAction: () async {
                               await listViewTasksRecord.reference
                                   .update(createTasksRecordData(
                                 completed: false,
                               ));
                             },
-                            child: TaskWidget(
-                              key: Key(
-                                  'Key0i2_${listViewIndex}_of_${listViewTasksRecordList.length}'),
-                              tasksDoc: listViewTasksRecord,
-                              checkAction: () async {},
-                            ),
                           );
                         },
                       );
