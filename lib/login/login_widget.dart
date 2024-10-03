@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -779,6 +780,35 @@ class _LoginWidgetState extends State<LoginWidget>
                                 ),
                                 createdTime: getCurrentTimestamp,
                               ));
+
+                          var confirmDialogResponse = await showDialog<bool>(
+                                context: context,
+                                builder: (alertDialogContext) {
+                                  return AlertDialog(
+                                    title: const Text('Hello'),
+                                    content: const Text(
+                                        'Check your email for welcome message!'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(
+                                            alertDialogContext, false),
+                                        child: const Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(
+                                            alertDialogContext, true),
+                                        child: const Text('Confirm'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ) ??
+                              false;
+                          await SendWelcomeCall.call(
+                            to: _model.signupEmailTextController.text,
+                            subject: _model.signupEmailTextController.text,
+                            text: 'Welcome to my App!',
+                          );
 
                           context.goNamedAuth('onboarding', context.mounted);
                         },

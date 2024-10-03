@@ -294,6 +294,8 @@ class _DetailsWidgetState extends State<DetailsWidget> {
                               ));
                               _model.editingMode = false;
                               safeSetState(() {});
+                            } else {
+                              return;
                             }
                           },
                           text: 'Update Task',
